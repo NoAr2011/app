@@ -1,0 +1,457 @@
+#:import adaptive_sp adaptive_font_size.adaptive_sp
+
+<WindowManager>:
+    StartScreen:
+        name: "start"
+    BookScreen:
+        name: "book"
+    NewPlayer:
+        name: "newPlayer"
+    GameRules:
+        name: "rules"
+
+<Screen>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 0.3
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            source: "background2.png"
+
+<MyButton@Button>:
+    color: 0, 0, 0, 0
+    text_size: self.size
+    background_normal: self.text + ".jpg"
+    bold: True
+    font_size: adaptive_sp(18)
+    border: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 0
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [15]
+            source: "turkiez.jpg"
+
+<TextButton@Button>:
+    color: "white"
+    background_normal: "button09.png"
+    halign: 'center'
+    valign: 'center'
+    bold: True
+    font_size: adaptive_sp(18)
+    allow_stretch: True
+    keep_ratio: False
+    border: 0, 0, 0, 0
+
+<MyTextInput@TextInput>:
+    background_normal: "button10.png"
+    background_active: "button10.png"
+    border: 0, 0, 0, 0
+    halign: 'center'
+    valign: 'middle'
+    multiline: False
+    padding: [0, (self.height - self.line_height) / 2]
+    foreground_color: "white"
+
+<MyLabel@Label>:
+    halign: 'center'
+    valign: 'middle'
+    canvas.before:
+        Color:
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            source: "button03.png"
+            radius: [5]
+
+<SpinnerOption>:
+    background_normal: "button3.png"
+    background_down: "button3.png"
+
+
+<StartScreen>:
+    GridLayout:
+        cols: 1
+        padding: 10, 20, 10, 10
+        spacing: 20
+        id: main_grid
+
+        GridLayout:
+            cols: 1
+            TextButton:
+                text: "Válassz egy kalandot"
+
+        ScrollView:
+            size_hint_y: None
+            size: root.width/1.02, root.height/1.15
+            pos_hint: {'x': 0.01, 'y': -.1}
+            do_scroll_x: False
+
+            GridLayout:
+                cols: 3
+                size_hint_y: None
+                height: self.minimum_height
+                id: book_main_grid
+                spacing: 20
+                padding: 50, 10
+
+<BookScreen>
+    GridLayout:
+        cols: 1
+        padding: 10, 10
+        spacing: 5
+        id: main_grid
+
+        MyLabel:
+            id: book_title
+            size_hint: None, None
+            size: root.width/1.04, root.height/14
+
+        GridLayout:
+            cols: 3
+            size_hint: None, None
+            size: root.width/1.04, root.height/8
+
+            Spinner:
+                background_normal: "button3.png"
+                background: "white"
+                text: " ... "
+                values: "Új Karakter", "Játékszabályok"
+                on_text: root.options_spinner(self)
+
+            GridLayout:
+                cols: 1
+
+                MyLabel:
+                    text: "Aktuális oldal"
+                    readonly: True
+
+                MyTextInput
+                    id: current_chapter
+                    font_size: root.textinput_font
+                    readonly: True
+
+            GridLayout:
+                cols: 1
+
+                MyTextInput:
+                    id: target_chapter
+                    input_filter : 'int'
+                    font_size: root.textinput_font
+
+                TextButton:
+                    text: "Ugrás az oldalra"
+                    font_size: root.button_font
+                    text_size: self.size
+                    on_release:
+                        root.jump_to_chapter()
+
+        GridLayout:
+            cols: 2
+            size_hint: None, None
+            size: root.width/1.04, root.height/1.5
+            spacing: 20
+            id: main_grid
+
+            GridLayout:
+                cols: 1
+                size_hint_x: None
+                size: root.width/1.5, root.height/1.2
+                padding: 10, 10
+                spacing: 20
+
+                ScrollView:
+                    size_hint: None, None
+                    size: root.width/1.6, root.height/1.9
+
+                    TextInput:
+                        id: chapter_text
+                        foreground_color: "white"
+                        readonly: True
+                        size_hint_y: None
+                        height: self.minimum_height
+                        background_color: 0, 0, 0, 0
+                        scroll_y: 1.0
+                        border: 0, 0, 0, 0
+
+
+                GridLayout:
+                    cols: 1
+                    id: chapter_grid
+                    size_hint: None, None
+                    size: root.width/1.5, root.height/12
+
+            GridLayout:
+                cols: 1
+                size_hint_x: None
+                size: root.width/4, root.height/1.2
+                id: player_info
+
+                MyLabel:
+                    text: "Karakter neve"
+
+                MyTextInput:
+                    id: player_name
+                    font_size: root.textinput_font
+
+                MyLabel:
+                    text: "Ügyesség"
+
+                GridLayout:
+                    cols: 2
+                    size_hint_y: None
+                    size: root.width/1.5, root.height/12
+                    MyLabel:
+                        text: "Kezdeti"
+
+                    MyLabel:
+                        text: "Aktuális"
+
+                    MyTextInput:
+                        id: start_dexterity
+                        readonly: True
+                        font_size: root.textinput_font
+
+                    MyTextInput:
+                        id: actual_dexterity
+                        font_size: root.textinput_font
+
+                MyLabel:
+                    text: "Életerő"
+
+                GridLayout:
+                    cols: 2
+                    size_hint_y: None
+                    size: root.width/1.5, root.height/12
+
+                    MyLabel:
+                        text: "Kezdeti"
+
+                    MyLabel:
+                        text: "Aktuális"
+
+                    MyTextInput:
+                        id: start_health
+                        readonly: True
+                        #font_size: 12
+                        font_size: root.textinput_font
+
+                    MyTextInput:
+                        id: actual_health
+                        # readonly: True
+                        # font_size: 12
+                        font_size: root.textinput_font
+
+                MyLabel:
+                    text: "Szerencse"
+
+                GridLayout:
+                    cols: 2
+                    size_hint_y: None
+                    size: root.width/1.5, root.height/12
+
+                    MyLabel:
+                        text: "Kezdeti"
+
+                    MyLabel:
+                        text: "Aktuális"
+
+                    MyTextInput:
+                        id: start_luck
+                        readonly: True
+                        # font_size: 12
+                        font_size: root.textinput_font
+
+                    MyTextInput:
+                        id: actual_luck
+                        # readonly: True
+                        # font_size: 12
+                        font_size: root.textinput_font
+
+                MyLabel:
+                    text: "Varázslatok"
+
+                GridLayout:
+                    cols: 2
+                    TextButton:
+                        text: "+/-"
+                        id: spell_edit
+
+                        on_release:
+                            root.backpack_edit("Varázslatok")
+
+                    TextButton:
+                        text: "Új"
+                        id: spell_new
+                        font_size: root.button_font
+                        on_release:
+                            root.backpack_new("Varázslatok")
+
+                MyLabel:
+                    text: "Felszerelés"
+                GridLayout:
+                    cols: 2
+                    TextButton:
+                        text: "+/-"
+
+                        id: backpack_edit
+                        on_release:
+                            root.backpack_edit("Felszerelés")
+
+                    TextButton:
+                        text: "Új"
+                        font_size: root.button_font
+                        id: backpack_new
+                        on_release:
+                            root.backpack_new("Felszerelés")
+
+        GridLayout:
+            cols: 2
+            size_hint: None, None
+            size: root.width/1.02, root.height/13
+
+            TextButton:
+                text: "Vissza"
+                theme_style: "Dark"
+                primary_palette: "Orange"
+                on_release:
+                    root.manager.current = "start"
+                    root.clear_all_widgets()
+
+            TextButton:
+                text: "Mentés"
+                theme_style: "Dark"
+                primary_palette: "Orange"
+                on_release:
+                    root.save_state()
+
+<NewPlayer>:
+    GridLayout:
+        cols:1
+        padding: 10, 10
+        spacing: 20
+        MyLabel:
+            text: "Karakter Létrehozása"
+
+        GridLayout:
+            cols: 2
+            size_hint: None, None
+            size: root.width/1.01, root.height/13
+
+            MyLabel:
+                text: "Könyv címe"
+
+            MyLabel:
+                text: "Aktuális oldal"
+
+            MyLabel:
+                id: book_name
+
+            MyLabel:
+                id: chapter
+
+        GridLayout:
+            cols: 2
+            size_hint: None, None
+            size: root.width/1.01, root.height/2
+
+            MyLabel:
+                text: "Karakter neve"
+
+            MyTextInput:
+                id: player_name
+                font_size: root.textinput_font
+
+            MyLabel:
+                text: "Ügyesség\n(maximum érték: 12)"
+
+            MyTextInput:
+                id: start_dexterity
+                font_size: root.textinput_font
+                hint_text:'Only Numbers'
+                input_filter : 'int'
+
+            MyLabel:
+                text: "Életerő\n(maximum érték: 24)"
+
+            MyTextInput:
+                id: start_health
+                font_size: root.textinput_font
+                hint_text:'Only Numbers'
+                input_filter : 'int'
+
+            MyLabel:
+                text: "Szerencse\n(maximum érték: 12)"
+
+            MyTextInput:
+                id: start_luck
+                font_size: root.textinput_font
+                # hint_text:'Only Numbers'
+                input_filter : 'int'
+
+        GridLayout:
+            cols: 2
+            size_hint: None, None
+            size: root.width/1.02, root.height/11
+
+            TextButton:
+                text: "Értékek generálása"
+                on_release:
+                    root.generate_player()
+
+        GridLayout:
+            cols: 2
+            size_hint: None, None
+            size: root.width/1.02, root.height/13
+
+            TextButton:
+                text: "Vissza"
+                theme_style: "Dark"
+                primary_palette: "Orange"
+                on_release:
+                    root.manager.current = "book"
+                    root.clear_all_widgets()
+
+            TextButton:
+                text: "Mentés"
+                theme_style: "Dark"
+                primary_palette: "Orange"
+                on_release:
+                    root.save_player()
+
+<GameRules>:
+    GridLayout:
+        cols: 1
+        padding: 10, 10
+        spacing: 10
+
+        GridLayout:
+            cols: 1
+            size_hint_y: None
+            size: root.width/1.5, root.height/1.2
+            padding: 10, 10
+            spacing: 20
+
+            ScrollView:
+                size_hint_y: None
+                size: root.width/1.6, root.height/1.2
+
+                TextInput:
+                    id: rules
+                    foreground_color: "white"
+                    readonly: True
+                    size_hint_y: None
+                    height: 10000
+                    background_color: 0, 0, 0, 0
+                    scroll_y: 1.0
+                    border: 0, 0, 0, 0
+
+        TextButton:
+            text: "Vissza"
+            theme_style: "Dark"
+            primary_palette: "Orange"
+            on_release:
+                root.manager.current = "book"
