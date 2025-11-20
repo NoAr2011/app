@@ -118,8 +118,10 @@ class BookScreen(Screen):
             else:
                 target_table = "spells"
 
-            player_data = self.app_globals.db_search.get_player_equipment(target_table, self.ids["player_name"].text)
-            player_id = self.app_globals.db_search.get_player_id(self.ids["player_name"].text)
+            player_data = self.app_globals.db_search.get_player_equipment(target_table, self.ids["player_name"].text,
+                                                                          self.ids["book_title"].text)
+            player_id = self.app_globals.db_search.get_player_id(self.ids["player_name"].text,
+                                                                 self.ids["book_title"].text)
 
             self.app_globals.pop_ups.player_stuff(self, instance, player_id, player_data)
         else:
@@ -127,7 +129,8 @@ class BookScreen(Screen):
 
     def backpack_new(self, instance):
         if self.ids["player_name"].text != "":
-            player_id = self.app_globals.db_search.get_player_id(self.ids["player_name"].text)
+            player_id = self.app_globals.db_search.get_player_id(self.ids["player_name"].text,
+                                                                 self.ids["book_title"].text)
 
             self.app_globals.pop_ups.player_stuff(self, instance, player_id, {})
         else:
@@ -178,9 +181,14 @@ class NewPlayer(Screen):
             if 0 < int(dexterity) < 13 and 0 < int(health) < 25 and 0 < int(luck) < 13:
 
                 existing_player =  self.app_globals.db_search.get_player(self.ids["book_name"].text)
+                existing_name = self.app_globals.db_search.get_player_id_name(player_name)
+
+                if len(existing_name) > 0:
+                    self.app_globals.pop_ups.warning_popup(self, "Ezzel a névvel mér regisztráltál karaktert!")
+                    return
 
                 if len(existing_player) > 0:
-                    warning_text = "Módosítod a meglévő karaktered?"
+                    warning_text = "Módosítod a meglévő karaktered? Mindened törlődik!"
                     self.app_globals.pop_ups.change_player_warning(self, warning_text, dexterity, health, luck, chapter,
                                                   player_name, book_id)
                 else:

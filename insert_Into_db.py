@@ -74,4 +74,12 @@ class AddingData:
 
         self.conn.commit()
 
+    def delete_player_items(self, table_name, player_name, book_id):
+        query_text = f"""Delete from {table_name} where player_id = 
+        (Select Id from player where player_name = '{player_name}' and book_id = 
+        (Select id from books where id={book_id}))"""
+
+        self.cursor.execute(query_text)
+
+        self.conn.commit()
 
