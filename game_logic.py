@@ -157,5 +157,7 @@ class ImplementGameLogic:
     def change_player(self, popup_window, screen, dex_start, hp_start, luck_start, chapter, player_name, book_id):
 
         self.inserting_to_db.update_player(dex_start, hp_start, luck_start, chapter, player_name, book_id)
+        self.inserting_to_db.delete_player_items("equipment", player_name, book_id)
+        self.inserting_to_db.delete_player_items("spells", player_name, book_id)
 
         popup_window.warning_popup(screen, "Karakter módosítva!")

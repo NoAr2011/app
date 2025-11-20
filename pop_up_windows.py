@@ -39,11 +39,11 @@ class PopUpsForGame:
         content.cols = 1
         content.spacing = 30
 
-        item_label = NewTextInput(18)
+        item_label = NewTextInput(16)
         item_label.text = warning_text
 
         item_label.readonly = True
-        item_label.padding = 20, 20
+
         content.add_widget(item_label)
 
         info_popup = InforPopup(content, screen, 2)

@@ -48,9 +48,10 @@ class DataSelect:
 
         return data
 
-    def get_player_equipment(self, target_table, player_name):
+    def get_player_equipment(self, target_table, player_name, book_title):
         self.cursor.execute(f"Select name, desc, quantity from {target_table} where player_id = "
-                            f"(Select Id from player where player_name = '{player_name}')")
+                            f"(Select Id from player where player_name = '{player_name}' and book_id = "
+                            f"(Select id from books where book_name='{book_title}'))")
 
         raw_data = self.cursor.fetchall()
         data = []
@@ -61,8 +62,9 @@ class DataSelect:
 
         return data
 
-    def get_player_id(self, player_name):
-        self.cursor.execute(f"Select Id from player where player_name = '{player_name}'")
+    def get_player_id(self, player_name, book_title):
+        self.cursor.execute(f"Select Id from player where player_name = '{player_name}' and book_id = "
+                            f"(Select id from books where book_name='{book_title}')")
 
         raw_data = self.cursor.fetchall()
         data = []
@@ -70,6 +72,18 @@ class DataSelect:
             for temp_item in raw_item:
                 # data.append(temp_item)
                 data = temp_item
+
+        return data
+
+    def get_player_id_name(self, player_name):
+        self.cursor.execute(f"Select Id from player where player_name = '{player_name}'")
+
+        raw_data = self.cursor.fetchall()
+        data = []
+        for raw_item in raw_data:
+            for temp_item in raw_item:
+                data.append(temp_item)
+
 
         return data
 
